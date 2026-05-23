@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DevCard - Cadastro de Desenvolvedores</title>
+
+<style>
+:root{
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --text:#0f172a;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --primary:#2563eb;
+    --primary-dark:#1e40af;
+    --warning:#f59e0b;
+    --danger:#dc2626;
+    --shadow:0 10px 30px rgba(15,23,42,0.08);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    padding:36px 24px 60px;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+}
+
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 24px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    margin-bottom:24px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.logo{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:linear-gradient(135deg, var(--primary), #60a5fa);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    letter-spacing:0.5px;
+}
+
+.title{
+    font-size:20px;
+    font-weight:700;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:4px;
+}
+
+.meta{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}
+
+.pill{
+    padding:6px 10px;
+    font-size:12px;
+    border-radius:999px;
+    background:#eff6ff;
+    color:var(--primary-dark);
+    border:1px solid #dbeafe;
+}
+
+.status{
+    padding:6px 10px;
+    font-size:12px;
+    border-radius:999px;
+    background:#ecfeff;
+    color:#0e7490;
+    border:1px solid #cffafe;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:20px 24px;
+    margin-bottom:24px;
+}
+
+.card-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:16px;
+}
+
+.card-title{
+    font-weight:700;
+    font-size:16px;
+}
+
+.card-subtitle{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:4px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin-bottom:16px;
+}
+
+.row-actions{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:16px;
+    align-items:end;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+label{
+    font-size:12px;
+    color:var(--muted);
+    font-weight:600;
+    letter-spacing:0.3px;
+    text-transform:uppercase;
+}
+
+input, select{
+    padding:12px 14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#f8fafc;
+    outline:none;
+    transition:border .2s, box-shadow .2s;
+}
+
+input:focus, select:focus{
+    border-color:#93c5fd;
+    box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+    background:white;
+}
+
+button{
+    padding:12px 18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:transform .08s ease, box-shadow .2s ease;
+}
+
+button:active{
+    transform:translateY(1px);
+}
+
+.btn-save{
+    background:var(--primary);
+    color:white;
+    box-shadow:0 8px 18px rgba(37,99,235,0.25);
+}
+
+.btn-edit{
+    background:var(--warning);
+    color:white;
+}
+
+.btn-delete{
+    background:var(--danger);
+    color:white;
+}
+
+.table-wrap{
+    overflow:auto;
+    border-radius:12px;
+    border:1px solid var(--border);
+}
+
+table{
+    width:100%;
+    background:white;
+    border-collapse:collapse;
+    min-width:720px;
+}
+
+th{
+    background:#0f172a;
+    color:white;
+    padding:14px 12px;
+    font-size:12px;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid var(--border);
+    text-align:center;
+    color:#0f172a;
+    font-size:14px;
+}
+
+tbody tr:hover{
+    background:#f8fafc;
+}
+
+.actions{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:24px;
+    border-bottom:2px solid var(--border);
+    overflow-x:auto;
+}
+
+.tab-btn{
+    padding:12px 20px;
+    background:transparent;
+    border:none;
+    border-bottom:3px solid transparent;
+    color:var(--muted);
+    cursor:pointer;
+    font-weight:600;
+    transition:all .2s;
+}
+
+.tab-btn.active{
+    color:var(--primary);
+    border-bottom-color:var(--primary);
+}
+
+.tab-content{
+    display:none;
+}
+
+.tab-content.active{
+    display:block;
+}
+
+@media (max-width: 900px){
+    .row, .row-actions{
+        grid-template-columns:1fr;
+    }
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topbar">
+  <div class="brand">
+    <div class="logo">DC</div>
+    <div>
+      <div class="title">DevCard ERP</div>
+      <div class="subtitle">Cadastro e governanca de desenvolvedores</div>
+    </div>
+  </div>
+  <div class="meta">
+    <span class="status">Sistema Online</span>
+    <span class="pill">Ambiente: Producao</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="abaAtiva('devs')">👨‍💻 Desenvolvedores</button>
+  <button class="tab-btn" onclick="abaAtiva('habilidades')">🔧 Habilidades</button>
+  <button class="tab-btn" onclick="abaAtiva('projetos')">📊 Projetos</button>
+  <button class="tab-btn" onclick="abaAtiva('dev-skills')">🎯 Melhores em cada Área</button>
+</div>
+
+<!-- ABA 1: DESENVOLVEDORES -->
+<div id="devs" class="tab-content active">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Cadastro de Desenvolvedores</div>
+        <div class="card-subtitle">Registre profissionais e niveis de senioridade</div>
+      </div>
+      <span class="pill">CRUD</span>
+    </div>
+
+    <input type="hidden" id="id">
+
+    <div class="row">
+      <div class="field">
+        <label for="nome">Nome</label>
+        <input id="nome" placeholder="Ex: Ana Souza">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" placeholder="ana@empresa.com">
+      </div>
+    </div>
+
+    <div class="row-actions">
+      <div class="field">
+        <label for="nivel">Nivel</label>
+        <select id="nivel">
+          <option value="Junior">Junior</option>
+          <option value="Pleno">Pleno</option>
+          <option value="Senior">Senior</option>
+        </select>
+      </div>
+
+      <button class="btn-save" onclick="salvarDev()">Salvar registro</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Equipe Registrada</div>
+        <div class="card-subtitle">Lista de desenvolvedores cadastrados no sistema</div>
+      </div>
+      <span class="pill">API /api/devs</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Nivel</th>
+            <th>Acoes</th>
+          </tr>
+        </thead>
+
+        <tbody id="lista-devs"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ABA 2: HABILIDADES -->
+<div id="habilidades" class="tab-content">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Cadastro de Habilidades</div>
+        <div class="card-subtitle">Defina tecnologias e competencias</div>
+      </div>
+      <span class="pill">CRUD</span>
+    </div>
+
+    <input type="hidden" id="id-hab">
+
+    <div class="row">
+      <div class="field">
+        <label for="nome-hab">Nome da Habilidade</label>
+        <input id="nome-hab" placeholder="Ex: React, Python, Docker">
+      </div>
+    </div>
+
+    <button class="btn-save" onclick="salvarHabilidade()">Salvar habilidade</button>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Habilidades Registradas</div>
+        <div class="card-subtitle">Lista de tecnologias cadastradas</div>
+      </div>
+      <span class="pill">API /api/habilidades</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Habilidade</th>
+            <th>Acoes</th>
+          </tr>
+        </thead>
+
+        <tbody id="lista-habilidades"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ABA 3: PROJETOS -->
+<div id="projetos" class="tab-content">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Cadastro de Projetos</div>
+        <div class="card-subtitle">Registre projetos e associe aos desenvolvedores</div>
+      </div>
+      <span class="pill">CRUD</span>
+    </div>
+
+    <input type="hidden" id="id-proj">
+
+    <div class="row">
+      <div class="field">
+        <label for="nome-proj">Nome do Projeto</label>
+        <input id="nome-proj" placeholder="Ex: DevCard App">
+      </div>
+      <div class="field">
+        <label for="dev-id">Desenvolvedor</label>
+        <select id="dev-id"></select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="desc-proj">Descricao</label>
+        <input id="desc-proj" placeholder="Breve descricao do projeto">
+      </div>
+    </div>
+
+    <button class="btn-save" onclick="salvarProjeto()">Salvar projeto</button>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Projetos Registrados</div>
+        <div class="card-subtitle">Lista de projetos e responsaveis</div>
+      </div>
+      <span class="pill">API /api/projetos</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Projeto</th>
+            <th>Descricao</th>
+            <th>Desenvolvedor</th>
+            <th>Acoes</th>
+          </tr>
+        </thead>
+
+        <tbody id="lista-projetos"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ABA 4: DEV x HABILIDADES -->
+<div id="dev-skills" class="tab-content">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Associar Habilidades aos Desenvolvedores</div>
+        <div class="card-subtitle">Defina quais habilidades cada desenvolvedor possui</div>
+      </div>
+      <span class="pill">M:N Relationship</span>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="dev-select">Selecionar Desenvolvedor</label>
+        <select id="dev-select" onchange="carregarHabilidadesDev()"></select>
+      </div>
+      <div class="field">
+        <label for="hab-select">Selecionar Habilidade</label>
+        <select id="hab-select"></select>
+      </div>
+    </div>
+
+    <button class="btn-save" onclick="associarHabilidade()">Adicionar Habilidade</button>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Habilidades do Desenvolvedor</div>
+        <div class="card-subtitle">Competencias associadas</div>
+      </div>
+      <span class="pill">API /api/dev-habilidades</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Habilidade</th>
+            <th>Acoes</th>
+          </tr>
+        </thead>
+
+        <tbody id="lista-dev-habilidades"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+
+const API = "/api";
+
+// ===== ABAS =====
+function abaAtiva(aba) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById(aba).classList.add('active');
+  event.target.classList.add('active');
+  
+  if (aba === 'devs') carregarDevs();
+  if (aba === 'habilidades') carregarHabilidades();
+  if (aba === 'projetos') { carregarProjetos(); carregarDevsSelect(); }
+  if (aba === 'dev-skills') { carregarDevsSelect(); carregarHabilidadesSelect(); }
+}
+
+// ===== DESENVOLVEDORES =====
+async function carregarDevs(){
+  try {
+    const resposta = await fetch(`${API}/devs`);
+    if (!resposta.ok) return;
+    const dados = await resposta.json();
+    let html = "";
+    dados.forEach(dev => {
+      html += `
+        <tr>
+          <td>${dev.id}</td>
+          <td>${dev.nome}</td>
+          <td>${dev.email}</td>
+          <td>${dev.nivel}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-edit" onclick="editarDev(${dev.id}, '${dev.nome}', '${dev.email}', '${dev.nivel}')">Editar</button>
+              <button class="btn-delete" onclick="excluirDev(${dev.id})">Excluir</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    document.getElementById("lista-devs").innerHTML = html;
+  } catch (err) {
+    console.error('Erro:', err);
+  }
+}
+
+function editarDev(id, nome, email, nivel) {
+  document.getElementById("id").value = id;
+  document.getElementById("nome").value = nome;
+  document.getElementById("email").value = email;
+  document.getElementById("nivel").value = nivel;
+}
+
+async function salvarDev(){
+  try {
+    const id = document.getElementById("id").value;
+    const nome = document.getElementById("nome").value;
+    const email = document.getElementById("email").value;
+    const nivel = document.getElementById("nivel").value;
+
+    if (!nome || !email) {
+      alert('Preenchha nome e email!');
+      return;
+    }
+
+    const dados = { nome, email, nivel };
+    let url = `${API}/devs`;
+    let metodo = 'POST';
+
+    if (id) {
+      url = `${API}/devs/${id}`;
+      metodo = 'PUT';
+    }
+
+    const resp = await fetch(url, {
+      method: metodo,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    });
+
+    if (!resp.ok) {
+      const erro = await resp.json();
+      alert('Erro: ' + (erro.erro || 'Erro desconhecido'));
+      return;
+    }
+
+    document.getElementById("id").value = "";
+    document.getElementById("nome").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("nivel").value = "Junior";
+    carregarDevs();
+    carregarDevsSelect();
+  } catch (err) {
+    alert('Erro ao salvar: ' + err.message);
+  }
+}
+
+async function excluirDev(id){
+  try {
+    if (!confirm('Tem certeza que deseja excluir?')) return;
+    const resp = await fetch(`${API}/devs/${id}`, { method: "DELETE" });
+    if (!resp.ok) {
+      const erro = await resp.json();
+      alert('Erro: ' + (erro.erro || 'Erro desconhecido'));
+      return;
+    }
+    carregarDevs();
+    carregarDevsSelect();
+  } catch (err) {
+    alert('Erro ao excluir: ' + err.message);
+  }
+}
+
+// ===== HABILIDADES =====
+async function carregarHabilidades(){
+  try {
+    const resposta = await fetch(`${API}/habilidades`);
+    if (!resposta.ok) return;
+    const dados = await resposta.json();
+    let html = "";
+    dados.forEach(hab => {
+      html += `
+        <tr>
+          <td>${hab.id}</td>
+          <td>${hab.nome}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-delete" onclick="excluirHabilidade(${hab.id})">Excluir</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    document.getElementById("lista-habilidades").innerHTML = html;
+  } catch (err) {
+    console.error('Erro:', err);
+  }
+}
+
+async function carregarHabilidadesSelect(){
+  try {
+    const resposta = await fetch(`${API}/habilidades`);
+    if (!resposta.ok) return;
+    const dados = await resposta.json();
+    let html = '<option value="">-- Selecione uma habilidade --</option>';
+    dados.forEach(hab => {
+      html += `<option value="${hab.id}">${hab.nome}</option>`;
+    });
+    document.getElementById("hab-select").innerHTML = html;
+  } catch (err) {
+    console.error('Erro:', err);
+  }
+}
+
+async function salvarHabilidade(){
+  try {
+    const nome = document.getElementById("nome-hab").value;
+    if (!nome) {
+      alert('Informe o nome da habilidade!');
+      return;
+    }
+
+    const resp = await fetch(`${API}/habilidades`, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome })
+    });
+
+    if (!resp.ok) {
+      const erro = await resp.json();
+      alert('Erro: ' + (erro.erro || 'Erro desconhecido'));
+      return;
+    }
+
+    document.getElementById("nome-hab").value = "";
+    carregarHabilidades();
+    carregarHabilidadesSelect();
+  } catch (err) {
+    alert('Erro ao salvar: ' + err.message);
+  }
+}
+
+async function excluirHabilidade(id){
+  try {
+    if (!confirm('Tem certeza?')) return;
+    const resp = await fetch(`${API}/habilidades/${id}`, { method: "DELETE" });
+    if (!resp.ok) throw new Error('Erro ao excluir');
+    carregarHabilidades();
+    carregarHabilidadesSelect();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  }
+}
+
+// ===== PROJETOS =====
+async function carregarDevsSelect(){
+  try {
+    const resposta = await fetch(`${API}/devs`);
+    if (!resposta.ok) return;
+    const dados = await resposta.json();
+    let html = '<option value="">-- Selecione um desenvolvedor --</option>';
+    dados.forEach(dev => {
+      html += `<option value="${dev.id}">${dev.nome}</option>`;
+    });
+    document.getElementById("dev-id").innerHTML = html;
+    document.getElementById("dev-select").innerHTML = html;
+  } catch (err) {
+    console.error('Erro:', err);
+  }
+}
+
+async function carregarProjetos(){
+  try {
+    const resposta = await fetch(`${API}/projetos`);
+    if (!resposta.ok) return;
+    const dados = await resposta.json();
+    let html = "";
+    dados.forEach(proj => {
+      html += `
+        <tr>
+          <td>${proj.id}</td>
+          <td>${proj.nome}</td>
+          <td>${proj.descricao || '-'}</td>
+          <td>${proj.dev_nome || '-'}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-edit" onclick="editarProjeto(${proj.id}, '${proj.nome}', '${proj.descricao}', ${proj.dev_id})">Editar</button>
+              <button class="btn-delete" onclick="excluirProjeto(${proj.id})">Excluir</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    document.getElementById("lista-projetos").innerHTML = html;
+  } catch (err) {
+    console.error('Erro:', err);
+  }
+}
+
+function editarProjeto(id, nome, descricao, dev_id) {
+  document.getElementById("id-proj").value = id;
+  document.getElementById("nome-proj").value = nome;
+  document.getElementById("desc-proj").value = descricao || '';
+  document.getElementById("dev-id").value = dev_id;
+}
+
+async function salvarProjeto(){
+  try {
+    const id = document.getElementById("id-proj").value;
+    const nome = document.getElementById("nome-proj").value;
+    const descricao = document.getElementById("desc-proj").value;
+    const dev_id = document.getElementById("dev-id").value;
+
+    if (!nome || !dev_id) {
+      alert('Preenchha nome e desenvolvedor!');
+      return;
+    }
+
+    const dados = { nome, descricao, dev_id };
+    let url = `${API}/projetos`;
+    let metodo = 'POST';
+
+    if (id) {
+      url = `${API}/projetos/${id}`;
+      metodo = 'PUT';
+    }
+
+    const resp = await fetch(url, {
+      method: metodo,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(dados)
+    });
+
+    if (!resp.ok) throw new Error('Erro ao salvar');
+
+    document.getElementById("id-proj").value = "";
+    document.getElementById("nome-proj").value = "";
+    document.getElementById("desc-proj").value = "";
+    document.getElementById("dev-id").value = "";
+    carregarProjetos();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  }
+}
+
+async function excluirProjeto(id){
+  try {
+    if (!confirm('Tem certeza?')) return;
+    const resp = await fetch(`${API}/projetos/${id}`, { method: "DELETE" });
+    if (!resp.ok) throw new Error('Erro ao excluir');
+    carregarProjetos();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  }
+}
+
+// ===== DEV x HABILIDADES =====
+async function carregarHabilidadesDev(){
+  try {
+    const dev_id = document.getElementById("dev-select").value;
+    if (!dev_id) {
+      document.getElementById("lista-dev-habilidades").innerHTML = '';
+      return;
+    }
+
+    const resposta = await fetch(`${API}/dev-habilidades/${dev_id}`);
+    if (!resposta.ok) return;
+    const dados = await resposta.json();
+    let html = "";
+    dados.forEach(hab => {
+      html += `
+        <tr>
+          <td>${hab.id}</td>
+          <td>${hab.nome}</td>
+          <td>
+            <div class="actions">
+              <button class="btn-delete" onclick="removerHabilidadeDev(${dev_id}, ${hab.id})">Remover</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+    document.getElementById("lista-dev-habilidades").innerHTML = html;
+  } catch (err) {
+    console.error('Erro:', err);
+  }
+}
+
+async function associarHabilidade(){
+  try {
+    const dev_id = document.getElementById("dev-select").value;
+    const hab_id = document.getElementById("hab-select").value;
+
+    if (!dev_id || !hab_id) {
+      alert('Selecione desenvolvedor e habilidade!');
+      return;
+    }
+
+    const resp = await fetch(`${API}/dev-habilidades`, {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dev_id, hab_id })
+    });
+
+    if (!resp.ok) throw new Error('Erro ao associar');
+
+    document.getElementById("hab-select").value = "";
+    carregarHabilidadesDev();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  }
+}
+
+async function removerHabilidadeDev(dev_id, hab_id){
+  try {
+    if (!confirm('Remover habilidade?')) return;
+    const resp = await fetch(`${API}/dev-habilidades/${dev_id}/${hab_id}`, { method: "DELETE" });
+    if (!resp.ok) throw new Error('Erro ao remover');
+    carregarHabilidadesDev();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  }
+}
+
+// ===== INICIALIZAÇÃO =====
+window.addEventListener('load', () => {
+  carregarDevs();
+  carregarDevsSelect();
+});
+
+</script>
+
+</body>
+</html>
